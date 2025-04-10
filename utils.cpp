@@ -18,20 +18,22 @@ void limpiar_pantalla() {
     (void)dummy;
 }
 
-class Menu {
-  private:
-    int opcion;
-    vector <Prueba *> pruebas;
-  public:
-    void mostrar_menu();
-    void ejecutar_opcion_1();
-    void ejecutar_opcion_2();
-    void ejecutar_opcion_3();
-    void ejecutar_opcion_4();
-    void ejecutar_opcion_5();
-    void ejecutar_opcion_6();
-};
-void Menu::ejecutar_opcion_1(){  
+namespace menu {
+  class Menu {
+    private:
+      int opcion;
+      vector <Prueba *> pruebas;
+    public:
+      void mostrar_menu();
+      void ejecutar_opcion_1();
+      void ejecutar_opcion_2();
+      void ejecutar_opcion_3();
+      void ejecutar_opcion_4();
+      void ejecutar_opcion_5();
+      void ejecutar_opcion_6();
+  };
+}
+void menu::Menu::ejecutar_opcion_1(){  
   int tot_preguntas;
   float tot_tiempo;
   limpiar_pantalla();
@@ -52,7 +54,7 @@ void Menu::ejecutar_opcion_1(){
     }
   }  
 };
-void Menu::ejecutar_opcion_2(){
+void menu::Menu::ejecutar_opcion_2(){
   int id_prueba;
   limpiar_pantalla();
   cout << "Insertar pregunta" << endl;
@@ -136,7 +138,7 @@ void Menu::ejecutar_opcion_2(){
       this_thread::sleep_for(chrono::seconds(SLEEP));
     }
 }
-void Menu::ejecutar_opcion_3(){
+void menu::Menu::ejecutar_opcion_3(){
   int id_prueba;
   int id_pregunta;
   limpiar_pantalla();
@@ -159,7 +161,7 @@ void Menu::ejecutar_opcion_3(){
   }
 };
 
-void Menu::ejecutar_opcion_4(){
+void menu::Menu::ejecutar_opcion_4(){
   int id_prueba;
   int id_pregunta;
   limpiar_pantalla();
@@ -182,7 +184,7 @@ void Menu::ejecutar_opcion_4(){
   }
 }
 
-void Menu::ejecutar_opcion_5(){
+void menu::Menu::ejecutar_opcion_5(){
   int id_prueba;
   limpiar_pantalla();
   cout << "Mostrar preguntas" << endl;
@@ -203,7 +205,7 @@ void Menu::ejecutar_opcion_5(){
   }
 }
 
-void Menu::ejecutar_opcion_6(){
+void menu::Menu::ejecutar_opcion_6(){
   int id_prueba;
   cout << "Ingrese el numero de la prueba: " << endl;
   cin >> id_prueba;
@@ -214,7 +216,7 @@ void Menu::ejecutar_opcion_6(){
   }
 }
 
-void Menu::mostrar_menu(){
+void menu::Menu::mostrar_menu(){
   while (true){
     limpiar_pantalla();
     cout << "1. Crear prueba" << endl;
