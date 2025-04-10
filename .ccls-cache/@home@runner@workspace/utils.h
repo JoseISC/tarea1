@@ -1,11 +1,6 @@
-#include <iostream>
-#include <stdlib.h>
 #include <vector>
-#include <chrono>
-#include <thread>
 #include <cstdlib>
 #include <sstream>
-#include <string>
 #include "prueba.h"
 #include "preguntas.h"
 
