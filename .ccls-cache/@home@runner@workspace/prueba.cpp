@@ -1,38 +1,17 @@
+#include "prueba.h"
 #include <iostream>
-#include <stdlib.h>
-#include <vector>
 #include <chrono>
 #include <thread>
-#include <cstdlib>
-#include <sstream>
-#include <string>
-#include "preguntas.h"
+#define SLEEP 1
 
 using namespace std;
-using namespace preguntas;
-
-//
-class Prueba {
-  private:
-    int tot_preguntas;
-    float tot_tiempo;
-    vector <Pregunta *> preguntas;
-  public:
-    Prueba(int tot_preguntas, float tot_tiempo);
-    ~Prueba();
-    void insertar_pregunta(Pregunta *pregunta);
-    void eliminar_pregunta(int n_pregunta);
-    void modificar_pregunta(int n_pregunta);
-    void mostrar_preguntas();
-    void crear_prueba();
-    int get_max_preguntas();
-    int get_cant_preguntas();
-};
+using namespace prueba;
 
 Prueba::Prueba(int tot_preguntas, float tot_tiempo){
     this->tot_preguntas = tot_preguntas;
     this->tot_tiempo = tot_tiempo;
 }
+
 Prueba::~Prueba(){
   //AGREGAR LOGICA DE ELIMINACION DE PREGUNTAS Y LUEGO ELIMINAR PRUEBA  
   for (int i = 0; i < this->preguntas.size(); i++){
@@ -43,20 +22,25 @@ Prueba::~Prueba(){
   this->tot_tiempo = 0;
   cout << "Se elimino la prueba" << endl;
 }
+
 void Prueba::insertar_pregunta(Pregunta *pregunta){
   this->preguntas.push_back(pregunta);
-};
+}
+
 int Prueba::get_cant_preguntas(){
   return this->preguntas.size();
-};
+}
+
 int Prueba::get_max_preguntas(){
   return this->tot_preguntas;
 }
+
 void Prueba::eliminar_pregunta(int n_pregunta){
   delete this->preguntas[n_pregunta - 1];
 }
+
 void Prueba::modificar_pregunta(int n_pregunta){
-  int tipo = this->preguntas[n_pregunta - 1] -> get_tipo();
+  int tipo = this->preguntas[n_pregunta - 1]->get_tipo();
   if (tipo == 1){
     string input;
 
@@ -82,9 +66,7 @@ void Prueba::modificar_pregunta(int n_pregunta){
     }
 
     cout << "Modificar la respuesta correcta: "<< endl;   
-
     this->preguntas[n_pregunta - 1]->set_correct_resp();
-
 
     cout << "Modificar la justificacion: "<< endl;
     getline(cin,input);  
@@ -120,7 +102,8 @@ void Prueba::modificar_pregunta(int n_pregunta){
     cout << "Se modifico la pregunta" << endl;
     this_thread::sleep_for(chrono::seconds(SLEEP));    
   }
-  }
+}
+
 void Prueba::mostrar_preguntas(){
   for (int i = 0; i < this->preguntas.size(); i++){
     if(preguntas[i]==NULL){
