@@ -36,7 +36,7 @@ int Prueba::get_max_preguntas(){
 }
 
 void Prueba::eliminar_pregunta(int n_pregunta){
-  delete this->preguntas[n_pregunta - 1];
+  this->preguntas.erase(this->preguntas.begin() + n_pregunta - 1);
 }
 
 void Prueba::modificar_pregunta(int n_pregunta){
@@ -105,12 +105,16 @@ void Prueba::modificar_pregunta(int n_pregunta){
 }
 
 void Prueba::mostrar_preguntas(){
+  if(this->preguntas.size() == 0){
+    cout << "No hay preguntas que mostrar" << endl;
+  } else {
   for (int i = 0; i < this->preguntas.size(); i++){
     if(preguntas[i]==NULL){
       cout<<"Pregunta eliminada"<<endl;
     }
     else{
       cout << preguntas[i]->get_n_pregunta() << ". " << preguntas[i]->get_enunciado() << endl;
+    }
     }
   }
 }

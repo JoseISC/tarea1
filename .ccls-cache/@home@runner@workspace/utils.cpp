@@ -5,6 +5,7 @@
 #include <thread>
 #include <iostream>
 using namespace menu;
+using namespace preguntas;
 #define SLEEP 1
 
 
@@ -34,7 +35,7 @@ void Menu::ejecutar_opcion_1(){
     }
   }  
 };
-void menu::Menu::ejecutar_opcion_2(){
+void Menu::ejecutar_opcion_2(){
   int id_prueba;
   limpiar_pantalla();
   cout << "Insertar pregunta" << endl;
@@ -86,6 +87,7 @@ void menu::Menu::ejecutar_opcion_2(){
             string niv_tax;
             float tiempo_est = 3;
             string correct_resp;
+            cin.ignore();
             cout << "Ingrese el enunciado: ";
             getline(cin, enunciado);
             cout << "Ingrese el nivel taxonomico: ";
@@ -108,7 +110,7 @@ void menu::Menu::ejecutar_opcion_2(){
             this_thread::sleep_for(chrono::seconds(SLEEP));
           }
         } else {
-          cout << "No se puede insertar mas preguntas" << endl;
+          cout << "\n No se puede insertar mas preguntas" << endl;
           this_thread::sleep_for(chrono::seconds(SLEEP));
           break;
         }
@@ -118,7 +120,7 @@ void menu::Menu::ejecutar_opcion_2(){
       this_thread::sleep_for(chrono::seconds(SLEEP));
     }
 }
-void menu::Menu::ejecutar_opcion_3(){
+void Menu::ejecutar_opcion_3(){
   int id_prueba;
   int id_pregunta;
   limpiar_pantalla();
@@ -141,7 +143,7 @@ void menu::Menu::ejecutar_opcion_3(){
   }
 };
 
-void menu::Menu::ejecutar_opcion_4(){
+void Menu::ejecutar_opcion_4(){
   int id_prueba;
   int id_pregunta;
   limpiar_pantalla();
@@ -164,20 +166,19 @@ void menu::Menu::ejecutar_opcion_4(){
   }
 }
 
-void menu::Menu::ejecutar_opcion_5(){
+void Menu::ejecutar_opcion_5(){
   int id_prueba;
   limpiar_pantalla();
   cout << "Mostrar preguntas" << endl;
-  cout << "Ingrese el numero de la prueba: " << endl;
+  cout << "Ingrese el numero de la prueba: ";
   cin >> id_prueba;
+  cout<<endl;
   if (id_prueba > 0 && id_prueba <= this->pruebas.size()){
-    pruebas[id_prueba-1]->mostrar_preguntas();
-    cout<<"Presione una tecla para continuar..."<<endl;
+    cout << "Aqui estan las preguntas: " << endl;
+    pruebas[id_prueba-1]->mostrar_preguntas(); 
+    cin.ignore();
+    cout<<"Presione una tecla para continuar..."<<endl;  
     cin.get();
-    this_thread::sleep_for(chrono::seconds(SLEEP));  
-    this_thread::sleep_for(chrono::seconds(SLEEP));  
-    this_thread::sleep_for(chrono::seconds(SLEEP));  
-    this_thread::sleep_for(chrono::seconds(SLEEP));  
   }
   else{
     cout << "No existe esa prueba" << endl;
@@ -191,12 +192,13 @@ void menu::Menu::ejecutar_opcion_6(){
   cin >> id_prueba;
   if (id_prueba > 0 && id_prueba <= this->pruebas.size()){
     delete this->pruebas[id_prueba-1];
+    this->pruebas.erase(this->pruebas.begin() + id_prueba - 1);
     cout<<"Se elimino la prueba"<<endl;
     this_thread::sleep_for(chrono::seconds(SLEEP));
   }
 }
 
-void menu::Menu::mostrar_menu(){
+void Menu::mostrar_menu(){
   while (true){
     limpiar_pantalla();
     cout << "1. Crear prueba" << endl;
@@ -209,6 +211,9 @@ void menu::Menu::mostrar_menu(){
     cout << "Ingrese una opcion: ";
     cin >> this->opcion;
     if (this->opcion == 7){
+      limpiar_pantalla();
+      cout << "Saliendo..." <<endl<<"\nEstrudiantes:"<<endl<<"\t\tRaphaël Maufroy"<<endl<<"\t\tJosé Salazar Cabello\n"<<endl;
+      cout << "Gracias por usar nuestro programa" << endl;
       break;
     } else if (this->opcion == 1){
       ejecutar_opcion_1();

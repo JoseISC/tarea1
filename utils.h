@@ -2,10 +2,8 @@
 #include <cstdlib>
 #include <sstream>
 #include "prueba.h"
-#include "preguntas.h"
 
 using namespace std;
-using namespace preguntas;
 using namespace prueba;
 
 namespace menu{
