@@ -9,7 +9,7 @@ Pregunta::Pregunta(int n_pregunta, string enunciado, string niv_tax, float tiemp
   this->enunciado = enunciado;
   this->niv_tax = niv_tax;
   this->tiempo_est = tiempo_est;
-  this->siguiente = NULL;
+  //this->siguiente = NULL;
 }
 
 //DEFINICION DE DESTRUCTOR
@@ -18,13 +18,15 @@ Pregunta::~Pregunta(){
 }
 
 //DEFINICION DE METODOS DE CLASE PREGUNTA
-void Pregunta::set_siguiente(Pregunta *siguiente){
-  this->siguiente = siguiente;
-}
 
-Pregunta *Pregunta::get_siguiente(){
-  return this->siguiente;
-}
+// Metodo no utilizado
+//void Pregunta::set_siguiente(Pregunta *siguiente){
+//  this->siguiente = siguiente;
+//}
+
+//Pregunta *Pregunta::get_siguiente(){
+//  return this->siguiente;
+//}
 
 void Pregunta::set_enunciado(string enunciado){
   this->enunciado = enunciado;

@@ -1,7 +1,9 @@
+// HEADER DE LA CLASE PREGUNTA
 #include <string>
 #include <vector>
 using namespace std;
 namespace preguntas{
+  // CLASE PREGUNTA BASE
   class Pregunta{
     private:
       //ATRIBUTOS
@@ -9,10 +11,11 @@ namespace preguntas{
       string enunciado;
       string niv_tax;
       float tiempo_est;
-      Pregunta *siguiente;
+      //Pregunta *siguiente;  // Atributo no utilizado - implementación de lista enlazada descartada
     public:
       //CONSTRUCTOR - DESTRUCTOR
-      Pregunta();
+      // Constructor por defecto no utilizado - todas las preguntas se crean con parámetros
+      //Pregunta();
       Pregunta(int n_pregunta, string enunciado, string niv_tax, float tiempo_est);
       virtual ~Pregunta();
       //METODOS
@@ -23,8 +26,8 @@ namespace preguntas{
       void set_enunciado(string enunciado);
       void set_niv_tax(string niv_tax);
       void set_tiempo_est(float tiempo_est);
-      Pregunta *get_siguiente();
-      void set_siguiente(Pregunta *siguiente);
+      //Pregunta *get_siguiente();  // Método no utilizado - implementación de lista enlazada descartada
+      //void set_siguiente(Pregunta *siguiente);  // Método no utilizado - implementación de lista enlazada descartada
       virtual int get_tipo();
       virtual void set_correct_resp()=0;
   };
@@ -37,7 +40,8 @@ namespace preguntas{
     public:
       //CONSTRUCTOR - DESTRUCTOR
       Seleccion_Mult(string correct_resp, int n_pregunta, string enunciado, string niv_tax, float tiempo_est);
-      Seleccion_Mult();
+      // Constructor por defecto no utilizado - todas las preguntas de selección múltiple se crean con parámetros
+      //Seleccion_Mult();
       ~Seleccion_Mult();
       //METODOS
       string get_correct_resp();
@@ -54,7 +58,8 @@ namespace preguntas{
       string justificacion;
     public:
       //CONSTRUCTOR - DESTRUCTOR
-      Verdadero_Falso(int n_pregunta);
+      // Constructor no utilizado - todas las preguntas V/F requieren más información que solo el número
+      //Verdadero_Falso(int n_pregunta);
       Verdadero_Falso(int n_pregunta, string enunciado, string niv_tax, float tiempo_est, bool correct_resp, string justificacion);
       ~Verdadero_Falso();
       //METODOS
