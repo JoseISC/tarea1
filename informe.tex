@@ -1,0 +1,182 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{parskip} 
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+\definecolor{codebg}{RGB}{248,248,248}
+\definecolor{codeframe}{RGB}{220,220,220}
+\definecolor{codekeyword}{RGB}{0,102,204}
+\definecolor{codecomment}{RGB}{0,153,0}
+\definecolor{codestring}{RGB}{163,21,21}
+\definecolor{codenumbers}{gray}{0.5}
+\geometry{a4paper, margin=2.5cm}
+
+\title{Trabajo 1\\ Paradigmas de la Programación}
+\author{Raphaël Maufroy \& José Salazar Cabello}
+\date{Abril 2025}
+
+\lstdefinestyle{customc}{
+  language=C++,
+  backgroundcolor=\color{codebg},
+  frame=single,
+  rulecolor=\color{codeframe},
+  keywordstyle=\color{codekeyword}\bfseries,
+  commentstyle=\color{codecomment}\itshape,
+  stringstyle=\color{codestring},
+  basicstyle=\ttfamily\footnotesize,
+  numbers=left,
+  numberstyle=\tiny\color{codenumbers},
+  stepnumber=1,
+  numbersep=10pt,
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=2
+}
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\scshape\LARGE Universidad Andrés Bello \par}
+    \vspace{1cm}
+    {\scshape\Large Facultad de Ingeniería\par}
+    \vspace{1.5cm}
+    {\Large Paradigmas de la Programación\par}
+    \vspace{0.5cm}
+    {\huge\bfseries Trabajo 1\\La taxonomía de Bloom \par}
+    \vspace{2cm}
+    {\Large Autores: \\Raphaël Maufroy\\José Salazar Cabello\par}
+    \vspace{0.5cm}
+    {\Large Profesor: Juan Calderón Maureira\par}
+    \vspace{0.5cm}
+    {\Large Fecha: Abril 2025\par}
+    \vfill
+    {\large Año Académico: 2025, Semestre 1\par}
+\end{titlepage}
+
+\section{Introducción}
+El presente trabajo tiene como objetivo desarrollar un sistema en C++ que permita a un usuario crear y gestionar pruebas escritas utilizando la Taxonomía de Bloom como referencia principal.
+
+Dentro del desarrollo del trabajo se buscó aplicar conceptos fundamentales de programación orientada a objetos, como lo son la herencia, el polimorfismo y el manejo de memoria dinámica. Además, se consideró diseñar una solución modular y estructurada que permita un fácil mantenimiento y comprensión del código.
+
+La funcionalidad central del sistema consiste en gestionar pruebas compuestas por distintos tipos de preguntas, tales como preguntas de Verdadero o Falso y preguntas de Selección Múltiple. Cada una de estas preguntas se encuentra asociada a un nivel taxonómico, lo que permite categorizar y evaluar las habilidades que se desean medir en el evaluado.
+
+\section{Descripción de la solución}
+La solución se estructura en cuatro clases principales:
+\begin{enumerate}
+    \item La clase madre \textbf{Pregunta}, de la cual heredan tanto atributos como métodos las clases \textbf{Verdadero\_Falso} y \textbf{Seleccion\_Mult}. Se define en \texttt{preguntas.h} y \texttt{preguntas.cpp}
+    \item La clase \textbf{Prueba}, encargada de almacenar punteros de objetos de clase Pregunta. Se define en \texttt{prueba.h} y \texttt{prueba.cpp}
+    \item La clase \textbf{Menu}, que se encarga de la lógica general del programa. Se define en \texttt{utils.h} y \texttt{utils.cpp}
+\end{enumerate}
+
+\subsection{Clase Pregunta}
+La clase base \texttt{Pregunta} define la estructura común para todos los tipos de preguntas:
+
+\begin{lstlisting}[style=customc]
+class Pregunta {
+  private:
+    int n_pregunta;
+    string enunciado;
+    string niv_tax;
+    float tiempo_est;
+    Pregunta *siguiente;
+  public:
+    Pregunta();
+    virtual ~Pregunta();
+    // Métodos getters y setters
+    virtual void set_correct_resp()=0;
+};
+\end{lstlisting}
+
+Los atributos principales incluyen:
+\begin{itemize}
+    \item \texttt{n\_pregunta}: Identificador único de la pregunta
+    \item \texttt{enunciado}: Texto de la pregunta
+    \item \texttt{niv\_tax}: Nivel taxonómico según Bloom
+    \item \texttt{tiempo\_est}: Tiempo estimado para responder
+\end{itemize}
+
+\subsection{Clases Derivadas}
+
+\subsubsection{Clase Seleccion\_Mult}
+Esta clase implementa las preguntas de selección múltiple:
+
+\begin{lstlisting}[style=customc]
+class Seleccion_Mult : public Pregunta {  
+  private:
+    string correct_resp;
+    vector<string> dists;
+  public:
+    // Constructores y métodos
+};
+\end{lstlisting}
+
+\subsubsection{Clase Verdadero\_Falso}
+Esta clase maneja las preguntas de verdadero o falso:
+
+\begin{lstlisting}[style=customc]
+class Verdadero_Falso : public Pregunta {
+  private:
+    bool correct_resp;
+    string justificacion;
+  public:
+    // Constructores y métodos
+};
+\end{lstlisting}
+
+\subsection{Clase Prueba}
+La clase \texttt{Prueba} gestiona un conjunto de preguntas:
+
+\begin{lstlisting}[style=customc]
+class Prueba {
+  private:
+    int tot_preguntas;
+    float tot_tiempo;
+    vector<Pregunta *> preguntas;
+  public:
+    // Métodos de gestión de preguntas
+};
+\end{lstlisting}
+
+\subsection{Clase Menu}
+La clase \texttt{Menu} implementa la interfaz de usuario:
+
+\begin{lstlisting}[style=customc]
+class Menu {
+  private:
+    int opcion;
+    vector<Prueba *> pruebas;
+  public:
+    void mostrar_menu();
+    void ejecutar_opcion_1();
+    // ... más métodos
+};
+\end{lstlisting}
+
+\section{Funcionalidades Implementadas}
+El sistema permite:
+\begin{enumerate}
+    \item Crear nuevas pruebas especificando cantidad de preguntas y tiempo total
+    \item Insertar preguntas de dos tipos diferentes
+    \item Eliminar preguntas específicas
+    \item Modificar preguntas existentes
+    \item Mostrar todas las preguntas de una prueba
+    \item Eliminar pruebas completas
+\end{enumerate}
+
+\section{Conclusión}
+El desarrollo de este trabajo permitió implementar de manera práctica los principales conceptos de la programación orientada a objetos en C++. Se logró crear un sistema modular y estructurado que gestiona eficientemente pruebas y preguntas siguiendo la taxonomía de Bloom.
+
+El uso de herencia y polimorfismo resultó fundamental para manejar los diferentes tipos de preguntas de manera uniforme, mientras que el uso de memoria dinámica permitió una gestión flexible de las pruebas y sus componentes.
+
+La solución desarrollada demuestra la aplicabilidad de los conceptos de POO en problemas reales, resultando en un código mantenible, extensible y bien estructurado.
+
+\end{document} 
