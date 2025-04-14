@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.13)  14 APR 2025 15:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.13)  14 APR 2025 15:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -392,11 +392,11 @@ L3 programming layer <2024-01-22>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 9053 strings out of 476120
- 142195 string characters out of 5793657
+ 9051 strings out of 476120
+ 142173 string characters out of 5793657
  2225975 words of memory out of 5000000
  30916 multiletter control sequences out of 15000+600000
- 602479 words of font info for 94 fonts, out of 8000000 for 9000
+ 602388 words of font info for 93 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
  57i,7n,71p,1004b,1749s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/ty
@@ -405,7 +405,7 @@ sr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/fonts/type1/pu
 blic/lm/lmr6.pfb></usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share
 /texmf/fonts/type1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm
 /lmtt12.pfb></usr/share/texmf/fonts/type1/public/lm/lmtti10.pfb>
-Output written on informe.pdf (9 pages, 293531 bytes).
+Output written on informe.pdf (9 pages, 293335 bytes).
 PDF statistics:
  83 PDF objects out of 1000 (max. 8388607)
  51 compressed objects within 1 object stream
