@@ -190,6 +190,87 @@ void Prueba::modificar_pregunta(int n_pregunta) {
 }
 \end{lstlisting}
 
+\subsection{Clase Menu}
+La clase \texttt{Menu} implementa la interfaz de usuario y la l\'ogica principal del programa. Esta clase es responsable de la interacci\'on con el usuario y la gesti\'on de las pruebas:
+
+\begin{lstlisting}[style=customc]
+class Menu {
+  private:
+    int opcion;
+    vector<Prueba *> pruebas;
+  public:
+    void mostrar_menu();
+    void ejecutar_opcion_1();  // Crear prueba
+    void ejecutar_opcion_2();  // Insertar pregunta
+    void ejecutar_opcion_3();  // Eliminar pregunta
+    void ejecutar_opcion_4();  // Modificar pregunta
+    void ejecutar_opcion_5();  // Mostrar preguntas
+    void ejecutar_opcion_6();  // Eliminar prueba
+};
+\end{lstlisting}
+
+La implementaci\'on del men\'u sigue un patr\'on de dise\~no modular, donde cada opci\'on est\'a encapsulada en su propio m\'etodo. Por ejemplo, la creaci\'on de una prueba:
+
+\begin{lstlisting}[style=customc]
+void Menu::ejecutar_opcion_1() {  
+  int tot_preguntas;
+  float tot_tiempo;
+  limpiar_pantalla();
+  cout << "Crear prueba" << endl;
+  cout << "Ingrese el numero de preguntas: ";
+  cin >> tot_preguntas;
+  cout << "Ingrese el tiempo total estimado: ";
+  cin >> tot_tiempo;
+  if (tot_preguntas > 0) {
+    if (tot_tiempo > 0) {
+      Prueba *prueba = new Prueba(tot_preguntas, tot_tiempo);
+      this->pruebas.push_back(prueba);
+    } else {
+      // Tiempo por defecto: 3 minutos por pregunta
+      Prueba *prueba = new Prueba(tot_preguntas, tot_preguntas * 3);
+      this->pruebas.push_back(prueba);
+    }
+  }  
+}
+\end{lstlisting}
+
+Las principales decisiones de dise\~no en la clase Menu incluyen:
+
+\begin{enumerate}
+    \item \textbf{Gesti\'on de Memoria Din\'amica}: Utilizamos un vector de punteros a \texttt{Prueba} para mantener las pruebas creadas:
+    \begin{lstlisting}[style=customc]
+    vector<Prueba *> pruebas;
+    
+    // En ejecutar_opcion_6 (eliminar prueba):
+    delete this->pruebas[id_prueba-1];
+    this->pruebas.erase(this->pruebas.begin() + id_prueba - 1);
+    \end{lstlisting}
+
+    \item \textbf{Validaci\'on de Entradas}: Implementamos validaciones para asegurar la integridad de los datos:
+    \begin{lstlisting}[style=customc]
+    if (id_prueba > 0 && id_prueba <= this->pruebas.size()) {
+      if (id_pregunta > 0 && 
+          id_pregunta <= this->pruebas[id_prueba-1]->get_cant_preguntas()) {
+        // Operación válida
+      }
+    }
+    \end{lstlisting}
+
+    \item \textbf{Interfaz de Usuario}: Dise\~namos una interfaz clara y amigable:
+    \begin{itemize}
+        \item Mensajes informativos para cada operaci\'on
+        \item Limpieza de pantalla entre operaciones
+        \item Pausas para mejor legibilidad (\texttt{this\_thread::sleep\_for})
+    \end{itemize}
+
+    \item \textbf{Modularidad}: Cada operaci\'on est\'a encapsulada en su propio m\'etodo, lo que facilita:
+    \begin{itemize}
+        \item Mantenimiento del c\'odigo
+        \item Depuraci\'on de errores
+        \item Extensibilidad del sistema
+    \end{itemize}
+\end{enumerate}
+
 \subsection{Decisiones de Dise\~no}
 Las principales decisiones de dise\~no tomadas incluyen:
 
@@ -211,6 +292,51 @@ Las principales decisiones de dise\~no tomadas incluyen:
     }
     \end{lstlisting}
 \end{enumerate}
+
+\subsection{Manejo del Tiempo}
+En nuestro sistema, el manejo del tiempo se implementa en dos niveles:
+
+\begin{enumerate}
+    \item \textbf{Tiempo por Pregunta}: Cada pregunta individual mantiene su propio tiempo estimado:
+    \begin{lstlisting}[style=customc]
+    class Pregunta {
+      private:
+        float tiempo_est;  // Tiempo estimado en minutos
+      public:
+        void set_tiempo_est(float tiempo_est);
+        float get_tiempo_est();
+    };
+    \end{lstlisting}
+
+    \item \textbf{Tiempo Total de la Prueba}: La clase Prueba mantiene un tiempo total:
+    \begin{lstlisting}[style=customc]
+    class Prueba {
+      private:
+        float tot_tiempo;  // Tiempo total en minutos
+    };
+    \end{lstlisting}
+\end{enumerate}
+
+Observamos algunas limitaciones en la implementaci\'on actual:
+
+\begin{itemize}
+    \item No hay una actualizaci\'on autom\'atica del tiempo total cuando se modifican los tiempos individuales de las preguntas
+    \item El tiempo total se establece al crear la prueba y no se ajusta al agregar o eliminar preguntas
+    \item Por defecto, se asignan 3 minutos por pregunta si no se especifica un tiempo total:
+    \begin{lstlisting}[style=customc]
+    // En Menu::ejecutar_opcion_1()
+    if (tot_tiempo <= 0) {
+      Prueba *prueba = new Prueba(tot_preguntas, tot_preguntas * 3);
+    }
+    \end{lstlisting}
+\end{itemize}
+
+Posibles mejoras para futuras versiones:
+\begin{itemize}
+    \item Implementar un m\'etodo para recalcular el tiempo total basado en los tiempos individuales
+    \item Agregar validaciones para asegurar que el tiempo total sea coherente con la suma de tiempos individuales
+    \item Permitir ajustes din\'amicos del tiempo total cuando se modifican las preguntas
+\end{itemize}
 
 \section{Conclusi\'on}
 El desarrollo de este trabajo nos permiti\'o implementar de manera pr\'actica los principales conceptos de la programaci\'on orientada a objetos en C++. Logramos crear un sistema modular y estructurado que gestiona eficientemente pruebas y preguntas siguiendo la taxonom\'ia de Bloom.

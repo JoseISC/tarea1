@@ -8,6 +8,7 @@ namespace prueba{
       int tot_preguntas;
       float tot_tiempo;
       vector <Pregunta *> preguntas;
+      void recalcular_tiempo_total();
     public:
       Prueba(int tot_preguntas, float tot_tiempo);
       ~Prueba();
@@ -18,5 +19,6 @@ namespace prueba{
       void crear_prueba();
       int get_max_preguntas();
       int get_cant_preguntas();
+      float get_tiempo_total() const { return tot_tiempo; }
   };  
 }
