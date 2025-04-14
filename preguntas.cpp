@@ -103,19 +103,36 @@ int Verdadero_Falso::get_tipo(){
 
 void Seleccion_Mult::set_dists(){
   int cant_distractores;
+  string input;
   string distractor;
-  cout<<"Ingresa la cantidad de distractores: ";
-  cin>>cant_distractores;
-  if(cant_distractores>4){
-    cout<<"La cantidad de distractores no puede ser mayor que 4"<<endl;
-    cout<<"Se establecera la cantidad de distractores en 4"<<endl;
-    cant_distractores = 4;
-  }
+  
+  do {
+    cout << "Ingresa la cantidad de distractores (1-4): ";
+    getline(cin, input);
+    try {
+      cant_distractores = stoi(input);
+    } catch (...) {
+      cant_distractores = 0;
+    }
+    if (cant_distractores <= 0){
+      cout << "La cantidad de distractores no puede ser menor o igual a 0" << endl;
+      cout << "Se establecera la cantidad de distractores en 1" << endl;
+      cant_distractores = 1;
+    }
+    if (cant_distractores > 4){
+      cout << "La cantidad de distractores no puede ser mayor que 4" << endl;
+      cout << "Se establecera la cantidad de distractores en 4" << endl;
+      cant_distractores = 4;
+    }
+  } while (cant_distractores <= 0 || cant_distractores > 4);
+
   for(int i = 0; i < cant_distractores; i++){
-    cout<<"Ingresa el distractor "<<i+1<<": ";
-    cin>>distractor;
+    do {
+      cout << "Ingresa el distractor " << i+1 << ": ";
+      getline(cin, distractor);
+    } while(distractor.empty());
+    
     this->dists.push_back(distractor);
-    cout<<endl;
   }
 }
 
@@ -136,11 +153,10 @@ string Seleccion_Mult::get_correct_resp(){
 }
 
 string Seleccion_Mult::get_dists(int i){
-  if (i < 0 || i >= this->dists.size()){  
-    return this->dists[i];  
-  }else{
-    return "No existe ese distractor";
+  if (i >= 0 && i < this->dists.size()){  
+    return this->dists[i];
   }
+  return "No existe ese distractor";
 }
 
 void Seleccion_Mult::set_correct_resp(){

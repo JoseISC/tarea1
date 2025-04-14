@@ -3,6 +3,22 @@
 #include <vector>
 using namespace std;
 namespace preguntas{
+  const vector<string> NIVELES_TAXONOMICOS = {
+    "Conocimiento",
+    "Comprension",
+    "Aplicacion",
+    "Analisis",
+    "Sintesis",
+    "Evaluacion"
+  };
+
+  bool es_nivel_taxonomico_valido(const string& nivel) {
+    for (const auto& n : NIVELES_TAXONOMICOS) {
+      if (n == nivel) return true;
+    }
+    return false;
+  }
+
   // CLASE PREGUNTA BASE
   class Pregunta{
     private:

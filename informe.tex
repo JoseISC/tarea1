@@ -111,7 +111,9 @@ class Pregunta {
     virtual ~Pregunta();
     // Métodos getters y setters
     virtual void set_correct_resp()=0;
-    virtual int get_tipo()=0;
+    virtual int get_tipo();
+    void set_tiempo_est(float tiempo_est);
+    float get_tiempo_est();
 };
 \end{lstlisting}
 
@@ -140,6 +142,7 @@ class Seleccion_Mult : public Pregunta {
     ~Seleccion_Mult();
     void set_correct_resp();
     void set_dists();
+    string get_dists(int i);
     int get_tipo() { return 2; }
 };
 \end{lstlisting}
@@ -159,6 +162,7 @@ class Verdadero_Falso : public Pregunta {
     ~Verdadero_Falso();
     void set_correct_resp();
     bool get_correct_resp();
+    void set_justificacion(string justificacion);
     string get_justificacion();
     int get_tipo() { return 1; }
 };
@@ -173,6 +177,7 @@ class Prueba {
     int tot_preguntas;
     float tot_tiempo;
     vector<Pregunta *> preguntas;
+    void recalcular_tiempo_total();
   public:
     Prueba(int tot_preguntas, float tot_tiempo);
     ~Prueba();
@@ -182,6 +187,7 @@ class Prueba {
     void mostrar_preguntas();
     int get_max_preguntas();
     int get_cant_preguntas();
+    float get_tiempo_total() const { return tot_tiempo; }
 };
 \end{lstlisting}
 
@@ -192,19 +198,80 @@ void Prueba::modificar_pregunta(int n_pregunta) {
   int tipo = this->preguntas[n_pregunta - 1]->get_tipo();
   if (tipo == 1) {  // Verdadero_Falso
     string input;
-    cout << "Modificar el enunciado: " << endl;
+    cout << "Modificar el tiempo estimado: "<< endl;
     cin.ignore();
-    getline(cin, input);
-    if(!input.empty()) {
-      this->preguntas[n_pregunta - 1]->set_enunciado(input);
+    getline(cin,input);
+    if(!input.empty()){
+        this->preguntas[n_pregunta - 1]->set_tiempo_est(stof(input));
+        this->recalcular_tiempo_total();
+    }
+    // ... más código de modificación
+  } else { // Seleccion_Mult
+    // ... (obtener input para enunciado, nivel tax, tiempo)
+    cout << "Modificar el tiempo estimado: "<< endl;
+    cin.ignore();
+    getline(cin,input);
+    if(!input.empty()){
+        this->preguntas[n_pregunta - 1]->set_tiempo_est(stof(input));
+        this->recalcular_tiempo_total();
     }
     // ... más código de modificación
   }
 }
 \end{lstlisting}
 
+La implementación del método \texttt{recalcular\_tiempo\_total()} asegura que el tiempo total se mantenga sincronizado con la suma de los tiempos individuales de cada pregunta:
+
+\begin{lstlisting}[style=customc]
+void Prueba::recalcular_tiempo_total() {
+    float nuevo_tiempo = 0;
+    for (Pregunta* pregunta : preguntas) {
+        nuevo_tiempo += pregunta->get_tiempo_est();
+    }
+    this->tot_tiempo = nuevo_tiempo;
+}
+\end{lstlisting}
+
+El sistema actualiza automáticamente el tiempo total en los siguientes casos:
+
+\begin{itemize}
+    \item Al insertar una nueva pregunta:
+    \begin{lstlisting}[style=customc]
+    void Prueba::insertar_pregunta(Pregunta *pregunta) {
+        this->preguntas.push_back(pregunta);
+        this->recalcular_tiempo_total();
+    }
+    \end{lstlisting}
+
+    \item Al eliminar una pregunta existente:
+    \begin{lstlisting}[style=customc]
+    void Prueba::eliminar_pregunta(int n_pregunta) {
+        this->preguntas.erase(this->preguntas.begin() + n_pregunta - 1);
+        this->recalcular_tiempo_total();
+    }
+    \end{lstlisting}
+
+    \item Al modificar el tiempo estimado de una pregunta:
+    \begin{lstlisting}[style=customc]
+    // En el método modificar_pregunta
+    if(!input.empty()) {
+        this->preguntas[n_pregunta - 1]->set_tiempo_est(stof(input));
+        this->recalcular_tiempo_total();
+    }
+    \end{lstlisting}
+\end{itemize}
+
+Esta implementación ofrece varias ventajas:
+
+\begin{itemize}
+    \item \textbf{Consistencia}: El tiempo total siempre refleja la suma real de los tiempos de las preguntas
+    \item \textbf{Automatización}: No requiere intervención manual para mantener el tiempo actualizado
+    \item \textbf{Encapsulamiento}: El método \texttt{recalcular\_tiempo\_total()} es privado, asegurando que solo se llame cuando es necesario
+    \item \textbf{Flexibilidad}: Permite modificar tiempos individuales manteniendo la coherencia del tiempo total
+\end{itemize}
+
 \subsection{Clase Menu}
-La clase \texttt{Menu} implementa la interfaz de usuario y la l\'ogica principal del programa. Esta clase es responsable de la interacci\'on con el usuario y la gesti\'on de las pruebas:
+La clase \texttt{Menu} implementa la interfaz de usuario y la l\'ogica principal del programa, definida en \texttt{utils.h} e implementada en \texttt{utils.cpp}. Esta clase es responsable de la interacci\'on con el usuario y la gesti\'on de las pruebas:
 
 \begin{lstlisting}[style=customc]
 class Menu {
@@ -228,21 +295,33 @@ La implementaci\'on del men\'u sigue un patr\'on de dise\~no modular, donde cada
 void Menu::ejecutar_opcion_1() {  
   int tot_preguntas;
   float tot_tiempo;
+  string input;
   limpiar_pantalla();
   cout << "Crear prueba" << endl;
-  cout << "Ingrese el numero de preguntas: ";
-  cin >> tot_preguntas;
-  cout << "Ingrese el tiempo total estimado: ";
-  cin >> tot_tiempo;
+  
+  do {
+    cout << "Ingrese el numero de preguntas (debe ser positivo): ";
+    getline(cin, input);
+    try { tot_preguntas = stoi(input); } catch (...) { tot_preguntas = 0; }
+  } while (tot_preguntas <= 0);
+
+  do {
+    cout << "Ingrese el tiempo total estimado (o 0 para usar el valor por defecto): ";
+    getline(cin, input);
+    try {
+      tot_tiempo = stof(input);
+      if (tot_tiempo < 0) tot_tiempo = 0;
+    } catch (...) { tot_tiempo = 0; }
+  } while (tot_tiempo < 0);
+
   if (tot_preguntas > 0) {
-    if (tot_tiempo > 0) {
-      Prueba *prueba = new Prueba(tot_preguntas, tot_tiempo);
-      this->pruebas.push_back(prueba);
-    } else {
-      // Tiempo por defecto: 3 minutos por pregunta
-      Prueba *prueba = new Prueba(tot_preguntas, tot_preguntas * 3);
-      this->pruebas.push_back(prueba);
+    if (tot_tiempo <= 0) {
+      tot_tiempo = tot_preguntas * 3.0f; // Tiempo por defecto
+      cout << "Usando tiempo por defecto: " << tot_tiempo << " minutos" << endl;
     }
+    Prueba *prueba = new Prueba(tot_preguntas, tot_tiempo);
+    this->pruebas.push_back(prueba);
+    cout << "Prueba creada exitosamente." << endl;
   }  
 }
 \end{lstlisting}
@@ -290,7 +369,7 @@ Las principales decisiones de dise\~no tomadas incluyen:
 \begin{enumerate}
     \item \textbf{Herencia y Polimorfismo}: Utilizamos una jerarqu\'ia de clases para manejar los diferentes tipos de preguntas. Por ejemplo, el m\'etodo virtual \texttt{get\_tipo()} nos permite identificar el tipo de pregunta sin necesidad de hacer casting:
     \begin{lstlisting}[style=customc]
-    virtual int get_tipo() = 0;  // En clase base
+    virtual int get_tipo();  // Implementado en clase base y derivadas
     int get_tipo() { return 1; } // En Verdadero_Falso
     int get_tipo() { return 2; } // En Seleccion_Mult
     \end{lstlisting}
@@ -306,69 +385,24 @@ Las principales decisiones de dise\~no tomadas incluyen:
     \end{lstlisting}
 \end{enumerate}
 
-\subsection{Manejo del Tiempo}
-En nuestro sistema, el manejo del tiempo se implementa en dos niveles:
+\section{Conclusi'on}
+El desarrollo de este trabajo nos permiti'o implementar de manera pr'actica los principales conceptos de la programaci'on orientada a objetos en C++. Logramos crear un sistema modular y estructurado que gestiona eficientemente pruebas y preguntas siguiendo la taxonom'ia de Bloom.
 
-\begin{enumerate}
-    \item \textbf{Tiempo por Pregunta}: Cada pregunta individual mantiene su propio tiempo estimado:
-    \begin{lstlisting}[style=customc]
-    class Pregunta {
-      private:
-        float tiempo_est;  // Tiempo estimado en minutos
-      public:
-        void set_tiempo_est(float tiempo_est);
-        float get_tiempo_est();
-    };
-    \end{lstlisting}
+El uso de herencia y polimorfismo result'o fundamental para manejar los diferentes tipos de preguntas de manera uniforme, mientras que el uso de memoria din'amica nos permiti'o una gesti'on flexible de las pruebas y sus componentes.
 
-    \item \textbf{Tiempo Total de la Prueba}: La clase Prueba mantiene un tiempo total:
-    \begin{lstlisting}[style=customc]
-    class Prueba {
-      private:
-        float tot_tiempo;  // Tiempo total en minutos
-    };
-    \end{lstlisting}
-\end{enumerate}
-
-Observamos algunas limitaciones en la implementaci\'on actual:
-
-\begin{itemize}
-    \item No hay una actualizaci\'on autom\'atica del tiempo total cuando se modifican los tiempos individuales de las preguntas
-    \item El tiempo total se establece al crear la prueba y no se ajusta al agregar o eliminar preguntas
-    \item Por defecto, se asignan 3 minutos por pregunta si no se especifica un tiempo total:
-    \begin{lstlisting}[style=customc]
-    // En Menu::ejecutar_opcion_1()
-    if (tot_tiempo <= 0) {
-      Prueba *prueba = new Prueba(tot_preguntas, tot_preguntas * 3);
-    }
-    \end{lstlisting}
-\end{itemize}
-
-Posibles mejoras para futuras versiones:
-\begin{itemize}
-    \item Implementar un m\'etodo para recalcular el tiempo total basado en los tiempos individuales
-    \item Agregar validaciones para asegurar que el tiempo total sea coherente con la suma de tiempos individuales
-    \item Permitir ajustes din\'amicos del tiempo total cuando se modifican las preguntas
-\end{itemize}
-
-\section{Conclusi\'on}
-El desarrollo de este trabajo nos permiti\'o implementar de manera pr\'actica los principales conceptos de la programaci\'on orientada a objetos en C++. Logramos crear un sistema modular y estructurado que gestiona eficientemente pruebas y preguntas siguiendo la taxonom\'ia de Bloom.
-
-El uso de herencia y polimorfismo result\'o fundamental para manejar los diferentes tipos de preguntas de manera uniforme, mientras que el uso de memoria din\'amica nos permiti\'o una gesti\'on flexible de las pruebas y sus componentes.
-
-La soluci\'on desarrollada demuestra la aplicabilidad de los conceptos de POO en problemas reales, resultando en un c\'odigo mantenible, extensible y bien estructurado que cumple con todos los requerimientos establecidos.
+La soluci'on desarrollada demuestra la aplicabilidad de los conceptos de POO en problemas reales, resultando en un c'odigo mantenible, extensible y bien estructurado que cumple con todos los requerimientos establecidos.
 
 \subsection{Cumplimiento de Objetivos}
 Se alcanzaron satisfactoriamente los siguientes objetivos:
 \begin{itemize}
-    \item Implementaci\'on de un sistema funcional para la gesti\'on de pruebas
-    \item Incorporaci\'on efectiva de los niveles taxon\'omicos de Bloom
+    \item Implementaci'on de un sistema funcional para la gesti'on de pruebas
+    \item Incorporaci'on efectiva de los niveles taxon'omicos de Bloom
     \item Desarrollo de una interfaz de usuario intuitiva
-    \item Implementaci\'on de todas las operaciones CRUD requeridas
+    \item Implementaci'on de todas las operaciones CRUD requeridas
 \end{itemize}
 
-\subsection{Reflexi\'on sobre el Trabajo}
-El desarrollo de este proyecto permiti\'o:
+\subsection{Reflexi'on sobre el Trabajo}
+El desarrollo de este proyecto permiti'o:
 \begin{itemize}
     \item Profundizar en la aplicaci\'on pr\'actica de conceptos de POO
     \item Comprender la importancia de un buen dise\~no de software

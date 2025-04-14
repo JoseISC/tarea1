@@ -17,12 +17,31 @@ void limpiar_pantalla() {
 void Menu::ejecutar_opcion_1(){  
   int tot_preguntas;
   float tot_tiempo;
+  string input;
   limpiar_pantalla();
   cout << "Crear prueba" << endl;
-  cout << "Ingrese el numero de preguntas: ";
-  cin >> tot_preguntas;
-  cout << "Ingrese el tiempo total estimado para la prueba (default 3 minutos por pregunta): ";
-  cin >> tot_tiempo;
+  
+  do {
+    cout << "Ingrese el numero de preguntas (debe ser positivo): ";
+    getline(cin, input);
+    try {
+      tot_preguntas = stoi(input);
+    } catch (...) {
+      tot_preguntas = 0;
+    }
+  } while (tot_preguntas <= 0);
+
+  do {
+    cout << "Ingrese el tiempo total estimado (o 0 para usar el valor por defecto): ";
+    getline(cin, input);
+    try {
+      tot_tiempo = stof(input);
+      if (tot_tiempo < 0) tot_tiempo = 0;
+    } catch (...) {
+      tot_tiempo = 0;
+    }
+  } while (tot_tiempo < 0);
+
   if (tot_preguntas > 0){
     if (tot_tiempo > 0){
       Prueba *prueba = new Prueba(tot_preguntas, tot_tiempo);
