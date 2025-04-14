@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.13)  13 APR 2025 17:04
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.4.13)  14 APR 2025 01:59
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -314,9 +314,9 @@ File: lstlang1.sty 2023/02/27 1.9 listings language file
 File: lstmisc.sty 2023/02/27 1.9 (Carsten Heinz)
 )
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 87.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 90.
  [1] [2] [3]
-(./informe.aux
+[4] (./informe.aux
 LaTeX Info: Redefining \. on input line 8.
 LaTeX Info: Redefining \% on input line 8.
 )
@@ -326,13 +326,13 @@ L3 programming layer <2024-01-22>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 8641 strings out of 476120
- 135436 string characters out of 5793657
- 2050975 words of memory out of 5000000
- 30538 multiletter control sequences out of 15000+600000
- 563919 words of font info for 82 fonts, out of 8000000 for 9000
+ 8678 strings out of 476120
+ 135968 string characters out of 5793657
+ 2108975 words of memory out of 5000000
+ 30573 multiletter control sequences out of 15000+600000
+ 563968 words of font info for 83 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
- 57i,5n,71p,1004b,1402s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,6n,71p,1004b,1749s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/sha
 re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/share/te
@@ -341,10 +341,10 @@ exmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts
 /type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1
 /public/amsfonts/cm/cmtt12.pfb>
-Output written on informe.pdf (4 pages, 105941 bytes).
+Output written on informe.pdf (5 pages, 115445 bytes).
 PDF statistics:
- 57 PDF objects out of 1000 (max. 8388607)
- 34 compressed objects within 1 object stream
+ 60 PDF objects out of 1000 (max. 8388607)
+ 36 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  28161 words of extra memory for PDF output out of 29859 (max. 10000000)
 

@@ -72,13 +72,16 @@ Dentro del desarrollo del trabajo se busc\'o aplicar conceptos fundamentales de 
 
 La funcionalidad central del sistema consiste en gestionar pruebas compuestas por distintos tipos de preguntas, tales como preguntas de Verdadero o Falso y preguntas de Selecci\'on M\'ultiple. Cada una de estas preguntas se encuentra asociada a un nivel taxon\'omico, lo que permite categorizar y evaluar las habilidades que se desean medir en el evaluado.
 
+En este informe se presentar\'a:
+\begin{itemize}
+    \item La descripci\'on detallada de la soluci\'on implementada
+    \item Las decisiones de dise\~no tomadas en el desarrollo
+    \item La estructura y funcionamiento del sistema
+    \item Las conclusiones y reflexiones sobre el trabajo realizado
+\end{itemize}
+
 \section{Descripci\'on de la soluci\'on}
 La soluci\'on se estructura en cuatro clases principales:
-\begin{enumerate}
-    \item La clase madre \textbf{Pregunta}, de la cual heredan tanto atributos como m\'etodos las clases \textbf{Verdadero\_Falso} y \textbf{Seleccion\_Mult}. Se define en \texttt{preguntas.h} y \texttt{preguntas.cpp}
-    \item La clase \textbf{Prueba}, encargada de almacenar punteros de objetos de clase Pregunta. Se define en \texttt{prueba.h} y \texttt{prueba.cpp}
-    \item La clase \textbf{Menu}, que se encarga de la l\'ogica general del programa. Se define en \texttt{utils.h} y \texttt{utils.cpp}
-\end{enumerate}
 
 \subsection{Clase Pregunta}
 La clase base \texttt{Pregunta} define la estructura com\'un para todos los tipos de preguntas:
@@ -90,12 +93,12 @@ class Pregunta {
     string enunciado;
     string niv_tax;
     float tiempo_est;
-    Pregunta *siguiente;
   public:
-    Pregunta();
+    Pregunta(int n_pregunta, string enunciado, string niv_tax, float tiempo_est);
     virtual ~Pregunta();
-    // M\'etodos getters y setters
+    // Métodos getters y setters
     virtual void set_correct_resp()=0;
+    virtual int get_tipo()=0;
 };
 \end{lstlisting}
 
@@ -118,7 +121,13 @@ class Seleccion_Mult : public Pregunta {
     string correct_resp;
     vector<string> dists;
   public:
-    // Constructores y m\'etodos
+    Seleccion_Mult(string correct_resp, int n_pregunta, 
+                   string enunciado, string niv_tax, 
+                   float tiempo_est);
+    ~Seleccion_Mult();
+    void set_correct_resp();
+    void set_dists();
+    int get_tipo() { return 2; }
 };
 \end{lstlisting}
 
@@ -131,7 +140,14 @@ class Verdadero_Falso : public Pregunta {
     bool correct_resp;
     string justificacion;
   public:
-    // Constructores y m\'etodos
+    Verdadero_Falso(int n_pregunta, string enunciado, 
+                    string niv_tax, float tiempo_est,
+                    bool correct_resp, string justificacion);
+    ~Verdadero_Falso();
+    void set_correct_resp();
+    bool get_correct_resp();
+    string get_justificacion();
+    int get_tipo() { return 1; }
 };
 \end{lstlisting}
 
@@ -145,41 +161,80 @@ class Prueba {
     float tot_tiempo;
     vector<Pregunta *> preguntas;
   public:
-    // M\'etodos de gesti\'on de preguntas
+    Prueba(int tot_preguntas, float tot_tiempo);
+    ~Prueba();
+    void insertar_pregunta(Pregunta *pregunta);
+    void eliminar_pregunta(int n_pregunta);
+    void modificar_pregunta(int n_pregunta);
+    void mostrar_preguntas();
+    int get_max_preguntas();
+    int get_cant_preguntas();
 };
 \end{lstlisting}
 
-\subsection{Clase Menu}
-La clase \texttt{Menu} implementa la interfaz de usuario:
+Un ejemplo de implementaci\'on de uno de sus m\'etodos principales es:
 
 \begin{lstlisting}[style=customc]
-class Menu {
-  private:
-    int opcion;
-    vector<Prueba *> pruebas;
-  public:
-    void mostrar_menu();
-    void ejecutar_opcion_1();
-    // ... m\'as m\'etodos
-};
+void Prueba::modificar_pregunta(int n_pregunta) {
+  int tipo = this->preguntas[n_pregunta - 1]->get_tipo();
+  if (tipo == 1) {  // Verdadero_Falso
+    string input;
+    cout << "Modificar el enunciado: " << endl;
+    cin.ignore();
+    getline(cin, input);
+    if(!input.empty()) {
+      this->preguntas[n_pregunta - 1]->set_enunciado(input);
+    }
+    // ... más código de modificación
+  }
+}
 \end{lstlisting}
 
-\section{Funcionalidades Implementadas}
-El sistema permite:
+\subsection{Decisiones de Dise\~no}
+Las principales decisiones de dise\~no tomadas incluyen:
+
 \begin{enumerate}
-    \item Crear nuevas pruebas especificando cantidad de preguntas y tiempo total
-    \item Insertar preguntas de dos tipos diferentes
-    \item Eliminar preguntas espec\'ificas
-    \item Modificar preguntas existentes
-    \item Mostrar todas las preguntas de una prueba
-    \item Eliminar pruebas completas
+    \item \textbf{Herencia y Polimorfismo}: Utilizamos una jerarqu\'ia de clases para manejar los diferentes tipos de preguntas. Por ejemplo, el m\'etodo virtual \texttt{get\_tipo()} nos permite identificar el tipo de pregunta sin necesidad de hacer casting:
+    \begin{lstlisting}[style=customc]
+    virtual int get_tipo() = 0;  // En clase base
+    int get_tipo() { return 1; } // En Verdadero_Falso
+    int get_tipo() { return 2; } // En Seleccion_Mult
+    \end{lstlisting}
+
+    \item \textbf{Gesti\'on de Memoria Din\'amica}: Implementamos un sistema de gesti\'on de memoria usando punteros y vectores de la STL:
+    \begin{lstlisting}[style=customc]
+    vector<Pregunta *> preguntas;  // Vector de punteros
+    ~Prueba() {
+      for(auto p : preguntas) {
+        delete p;  // Liberación de memoria
+      }
+    }
+    \end{lstlisting}
 \end{enumerate}
 
 \section{Conclusi\'on}
-El desarrollo de este trabajo permiti\'o implementar de manera pr\'actica los principales conceptos de la programaci\'on orientada a objetos en C++. Se logr\'o crear un sistema modular y estructurado que gestiona eficientemente pruebas y preguntas siguiendo la taxonom\'ia de Bloom.
+El desarrollo de este trabajo nos permiti\'o implementar de manera pr\'actica los principales conceptos de la programaci\'on orientada a objetos en C++. Logramos crear un sistema modular y estructurado que gestiona eficientemente pruebas y preguntas siguiendo la taxonom\'ia de Bloom.
 
-El uso de herencia y polimorfismo result\'o fundamental para manejar los diferentes tipos de preguntas de manera uniforme, mientras que el uso de memoria din\'amica permiti\'o una gesti\'on flexible de las pruebas y sus componentes.
+El uso de herencia y polimorfismo result\'o fundamental para manejar los diferentes tipos de preguntas de manera uniforme, mientras que el uso de memoria din\'amica nos permiti\'o una gesti\'on flexible de las pruebas y sus componentes.
 
-La soluci\'on desarrollada demuestra la aplicabilidad de los conceptos de POO en problemas reales, resultando en un c\'odigo mantenible, extensible y bien estructurado.
+La soluci\'on desarrollada demuestra la aplicabilidad de los conceptos de POO en problemas reales, resultando en un c\'odigo mantenible, extensible y bien estructurado que cumple con todos los requerimientos establecidos.
+
+\subsection{Cumplimiento de Objetivos}
+Se alcanzaron satisfactoriamente los siguientes objetivos:
+\begin{itemize}
+    \item Implementaci\'on de un sistema funcional para la gesti\'on de pruebas
+    \item Incorporaci\'on efectiva de los niveles taxon\'omicos de Bloom
+    \item Desarrollo de una interfaz de usuario intuitiva
+    \item Implementaci\'on de todas las operaciones CRUD requeridas
+\end{itemize}
+
+\subsection{Reflexi\'on sobre el Trabajo}
+El desarrollo de este proyecto permiti\'o:
+\begin{itemize}
+    \item Profundizar en la aplicaci\'on pr\'actica de conceptos de POO
+    \item Comprender la importancia de un buen dise\~no de software
+    \item Desarrollar habilidades en la gesti\'on de memoria din\'amica
+    \item Implementar soluciones modulares y extensibles
+\end{itemize}
 
 \end{document} 
