@@ -116,13 +116,9 @@ void Seleccion_Mult::set_dists(){
     }
     if (cant_distractores <= 0){
       cout << "La cantidad de distractores no puede ser menor o igual a 0" << endl;
-      cout << "Se establecera la cantidad de distractores en 1" << endl;
-      cant_distractores = 1;
-    }
+      }
     if (cant_distractores > 4){
       cout << "La cantidad de distractores no puede ser mayor que 4" << endl;
-      cout << "Se establecera la cantidad de distractores en 4" << endl;
-      cant_distractores = 4;
     }
   } while (cant_distractores <= 0 || cant_distractores > 4);
 
