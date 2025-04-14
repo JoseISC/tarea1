@@ -8,7 +8,6 @@ using namespace menu;
 using namespace preguntas;
 #define SLEEP 1
 
-
 void limpiar_pantalla() {
     int dummy = system("clear");
     (void)dummy;
@@ -54,6 +53,7 @@ void Menu::ejecutar_opcion_1(){
     }
   }  
 };
+
 void Menu::ejecutar_opcion_2(){
   int id_prueba;
   limpiar_pantalla();
@@ -139,6 +139,7 @@ void Menu::ejecutar_opcion_2(){
       this_thread::sleep_for(chrono::seconds(SLEEP));
     }
 }
+
 void Menu::ejecutar_opcion_3(){
   int id_prueba;
   int id_pregunta;
@@ -205,7 +206,7 @@ void Menu::ejecutar_opcion_5(){
   }
 }
 
-void menu::Menu::ejecutar_opcion_6(){
+void Menu::ejecutar_opcion_6(){
   int id_prueba;
   cout << "Ingrese el numero de la prueba: " << endl;
   cin >> id_prueba;
@@ -222,10 +223,10 @@ void Menu::mostrar_menu(){
     limpiar_pantalla();
     if(this->pruebas.size()!= 0){
       for(int i = 0; i < this->pruebas.size(); i++){
-        cout <<"Tiepo estimado de la prueba " <<i+1 << ": " << this->pruebas[i]->get_tiempo_est() << endl;
+        cout <<"Tiempo estimado de la prueba " <<i+1 << ": " << this->pruebas[i]->get_tiempo_total() << " minutos" << endl;
       }
     }
-      cout << "1. Crear prueba" << endl;
+    cout << "1. Crear prueba" << endl;
     cout << "2. Insertar pregunta" << endl;
     cout << "3. Eliminar pregunta" << endl;
     cout << "4. Modificar pregunta" << endl;
