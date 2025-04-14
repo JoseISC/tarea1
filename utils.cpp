@@ -220,7 +220,12 @@ void menu::Menu::ejecutar_opcion_6(){
 void Menu::mostrar_menu(){
   while (true){
     limpiar_pantalla();
-    cout << "1. Crear prueba" << endl;
+    if(this->pruebas.size()!= 0){
+      for(int i = 0; i < this->pruebas.size(); i++){
+        cout <<"Tiepo estimado de la prueba " <<i+1 << ": " << this->pruebas[i]->get_tiempo_est() << endl;
+      }
+    }
+      cout << "1. Crear prueba" << endl;
     cout << "2. Insertar pregunta" << endl;
     cout << "3. Eliminar pregunta" << endl;
     cout << "4. Modificar pregunta" << endl;
